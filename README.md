@@ -5,7 +5,8 @@ In this project, we programmed px-150 a 5 DoF robotic arm to solve a Rubik's cub
 Due to the limitations of px-150 we simplified the problem such that the robot's work space is only in x-direction. We added track/rails to support cube manipulation.
 
 Results:
-<iframe width="853" height="480" src="https://www.youtube.com/embed/ZS7FbuDW03o" title="Robot Arm Solves Rubik&#39;s Cube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+[![IMAGE ALT TEXT HERE]([https://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE](https://www.youtube.com/watch?v=ZS7FbuDW03o))
 
 To reproduce the results, follow these steps:
 
