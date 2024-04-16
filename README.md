@@ -6,7 +6,7 @@ Due to the limitations of px-150 we simplified the problem such that the robot's
 
 Results:
 
-[![IMAGE ALT TEXT HERE]([https://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE](https://www.youtube.com/watch?v=ZS7FbuDW03o))
+[![IMAGE ALT TEXT HERE]([https://www.youtube.com/watch?v=ZS7FbuDW03o])
 
 To reproduce the results, follow these steps:
 
