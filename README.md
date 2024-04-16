@@ -6,7 +6,7 @@ Due to the limitations of px-150 we simplified the problem such that the robot's
 
 Results:
 
-See the working demo on the included video file: # Robot Arm Solves Rubik's Cube.mp4
+See the working demo  @ https://youtu.be/serx4tou3Qs
 
 To reproduce the results, follow these steps:
 
