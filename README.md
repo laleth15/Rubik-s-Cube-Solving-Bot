@@ -18,10 +18,13 @@ To reproduce the results, follow these steps:
 6. Run python3 solve_cube.py -c <camera_number> -n <camera_name>
 
 Contributors:
-Dylan Marin; 
-Jeff Park; 
-Kevin Sani; 
-Laleth Indirani Nehrukumar.
+Dylan Marin - https://www.linkedin.com/in/dylanmarin/; 
+
+Jeff Park - https://www.linkedin.com/in/jeff-j-park/; 
+
+Kevin Sani - https://www.linkedin.com/in/kevin-sani-a041991b6/; 
+
+Laleth Indirani Nehrukumar - https://www.linkedin.com/in/laleth-indirani-nehrukumar-2b731216b/
 
 References:
 - https://docs.opencv.org/4.x/d5/dae/tutorial_aruco_detection.html
