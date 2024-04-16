@@ -7,6 +7,7 @@ Due to the limitations of px-150 we simplified the problem such that the robot's
 Results:
 
 See the working demo  @ https://youtu.be/serx4tou3Qs
+****************************************************************************************************************************************************************
 
 To reproduce the results, follow these steps:
 
@@ -17,7 +18,10 @@ To reproduce the results, follow these steps:
 5. Run camera calibration to get the calibration matrix, this process is important since the position estimation programs use it. This will not modify your webcam calibration.
 6. Run python3 solve_cube.py -c <camera_number> -n <camera_name>
 
+**********************************************************************************************************************************************************
+
 Contributors:
+
 Dylan Marin - https://www.linkedin.com/in/dylanmarin/; 
 
 Jeff Park - https://www.linkedin.com/in/jeff-j-park/; 
@@ -25,6 +29,8 @@ Jeff Park - https://www.linkedin.com/in/jeff-j-park/;
 Kevin Sani - https://www.linkedin.com/in/kevin-sani-a041991b6/; 
 
 Laleth Indirani Nehrukumar - https://www.linkedin.com/in/laleth-indirani-nehrukumar-2b731216b/
+
+*************************************************************************************************************************************************
 
 References:
 - https://docs.opencv.org/4.x/d5/dae/tutorial_aruco_detection.html
