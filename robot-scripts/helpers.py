@@ -5,13 +5,13 @@ from cv2 import aruco
 from collections import defaultdict
 
 def load_dict():
-    data = np.load('../april-tags-testing/markers-dict/dictionary.npz')
+    data = np.load('../markers-dict/dictionary.npz')
     loaded_dict = cv.aruco.Dictionary_create(10,3)
     loaded_dict.bytesList = data['bytesList']
     return loaded_dict
 
 def load_calib_data(camera_name):
-    calib_data_path = f"../shared-data/MultiMatrix_Camera_{camera_name}.npz"
+    calib_data_path = f"../calib-data/MultiMatrix_Camera_{camera_name}.npz"
     calib_data = np.load(calib_data_path)
     cam_mat = calib_data["camMatrix"]
     dist_coef = calib_data["distCoef"]

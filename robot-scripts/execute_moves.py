@@ -342,31 +342,45 @@ def full_scan(bot, step=None):
 
 
 def perform_actions(bot, actions):
-    for act in actions:
-        if act == "z":
-            z(bot)
-        elif act == "z'":
-            z_prime(bot)
-        elif act == "x":
-            x(bot)
-        elif act == "x'":
-            x_prime(bot)
-        elif act == "z2":
-            z2(bot)
-        elif act == "Uw1":
-            u1(bot)
-        elif act == "Uw2":
-            u2(bot)
-        elif act == "Uw3":
-            u3(bot)
-        elif act == "y":
-            y(bot)
-        elif act == "y'":
-            y_prime(bot)
-        elif act == "y2":
-            y2(bot)
+    '''
+    A function to perform certain sequence of robotic moves.
+        Parametrs:
+            bot (Object): Initialized robot objects
+            actions (list): Sequence of moves
+        Return:
+            (Boolean): Success/Fail
+    '''
+    try:
 
-        bot.arm.set_ee_cartesian_trajectory(z=0.05)
+        for act in actions:
+            if act == "z":
+                z(bot)
+            elif act == "z'":
+                z_prime(bot)
+            elif act == "x":
+                x(bot)
+            elif act == "x'":
+                x_prime(bot)
+            elif act == "z2":
+                z2(bot)
+            elif act == "Uw1":
+                u1(bot)
+            elif act == "Uw2":
+                u2(bot)
+            elif act == "Uw3":
+                u3(bot)
+            elif act == "y":
+                y(bot)
+            elif act == "y'":
+                y_prime(bot)
+            elif act == "y2":
+                y2(bot)
+
+            bot.arm.set_ee_cartesian_trajectory(z=0.05)
+            return True, None
+        
+    except Exception as err:
+        raise Exception(err)
 
 def main():
     bot = InterbotixManipulatorXS("px150", "arm", "gripper")

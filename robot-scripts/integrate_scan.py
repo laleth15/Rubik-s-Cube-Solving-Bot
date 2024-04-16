@@ -496,24 +496,6 @@ class CubeScanner:
 
         
 def scan_cube(CAMERA_NUMBER, CAMERA_NAME, bot):
-    # parser = argparse.ArgumentParser(description="Get the position of the marker")
-    # parser.add_argument("-c", "--camera", type=int, help="Enter camera number")
-    # parser.add_argument("-n", "--name", type=str, help="Enter camera name")
-    # args = parser.parse_args()
-
-    # if args.camera is None:
-    #     print("Please enter camera number using -c or --camera")
-    #     exit()
-    # else:
-    #     CAMERA_NUMBER = args.camera
-    #     print(f"Using camera number {CAMERA_NUMBER}")
-
-    # if args.name is None:
-    #     print("Please enter camera name using -n or --name")
-    #     exit()
-    # else:
-    #     CAMERA_NAME = args.name
-    #     print(f"Using camera name {CAMERA_NAME}")
 
     try: 
             

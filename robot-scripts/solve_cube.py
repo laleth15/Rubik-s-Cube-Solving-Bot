@@ -4,21 +4,25 @@ from time import sleep
 import sys
 import argparse
 from integrate_position_and_orientation import *
-from script_test import *
-from scan_integrate import scan_cube
-from marker_flatten import re_orient_cube
+from execute_moves import *
+from integrate_scan import scan_cube
+from cube_orientation import re_orient_cube
 from converter import *
-
-def locate_cube(cam_number):
-
-    return
-
-def place_cube_at_home(bot):
-
-    return
 
 
 def locate_and_grab(cam_name, cam_num, bot):
+    '''
+    A function to locate and grab Rubik's cube
+
+        Parameters:
+            cam_num (int): Camer ID/Number
+            cam_name (string): Name of the camera/file name of calibration data
+            bot (object): The initialized robot object
+        Rrturns:
+            (Boolean): 1 if grasp is success, 0 if fail, -1 if cancelled
+            up_marker_id (int): Tag ID of the top facing cube side
+            camera_side_id (int): Tag ID of the cube side facing the camera 
+    '''
 
     base_frame_offset = 0.2
     
@@ -27,9 +31,10 @@ def locate_and_grab(cam_name, cam_num, bot):
     if confirm == "Y" or confirm == "y":
         # Locate cube
         try:
+            # cube_x is in meters
             cube_x, up_marker_id, camera_side_id  = get_cube_x(cam_name, cam_num)
-            print(cube_x/100+base_frame_offset)
-            # If cube is closer than 30 cm cannot grab it
+
+            # If cube is closer than 10 cm or far than 45 cm cannot grab it
             if cube_x/100+base_frame_offset < 0.1 or cube_x/100+base_frame_offset > 0.45 :
                 raise Exception({"locate_cube": 1}) # Cube is out of reach
                 
@@ -45,17 +50,10 @@ def locate_and_grab(cam_name, cam_num, bot):
                 bot.gripper.open()
                 bot.arm.set_ee_pose_components(x=0.10, z = 0.07, pitch = 1.5)
                 bot.arm.go_to_home_pose()
-                success = grip_cube_at_x_small_reach(bot, 0.30)
                 
-            elif cube_x/100+base_frame_offset < 0.30:
-
+            if success == True:
                 success = grip_cube_at_x_small_reach(bot, (cube_x/100)+ base_frame_offset)
             
-            # if success:
-            #         bot.arm.set_ee_cartesian_trajectory(z = 0.05)
-            #         bot.arm.go_to_home_pose()
-
-            # if no valid pose if found
             if success == False:
                 bot.gripper.open()
                 bot.arm.go_to_sleep_pose()
@@ -70,8 +68,6 @@ def locate_and_grab(cam_name, cam_num, bot):
         return -1
     else:
         return 0
-
-
 
 
 if __name__ == '__main__':
@@ -95,12 +91,17 @@ if __name__ == '__main__':
         CAMERA_NUMBER = args.camera
         print(f"Using camera number {CAMERA_NUMBER}")
 
+    
     BOT = InterbotixManipulatorXS("px150", "arm", "gripper")
     SUCCESS = False
 
+    # Set Robot at an intial pose
     BOT.arm.go_to_sleep_pose()
     BOT.gripper.set_pressure(1)
     BOT.gripper.open()
+
+    re_orient_move_set = None
+    solve_move_set = None
 
     try:
         while SUCCESS == False:
@@ -120,28 +121,22 @@ if __name__ == '__main__':
                     continue
 
                 if res == 1:
-                    print("Grasping Successful")
+                    print("Grasping Successful. Trying to place it in home position.")
 
                 
                     
             except Exception as err:
-                print(err)
-                if err.keys()[0] == "locate_cube":
-                    if err.values()[0] == 1:
-                        print("Error while locating cube: Cube is out of reach \n Relocate the cube in the range 10 to 45 cm from base ")
-                    else:
-                        print("Error while locating cube: ", err)
-                        BOT.arm.go_to_sleep_pose()
-                        BOT.gripper.open()
-                        sys.exit(1)
+                # 
+                # if err.keys()[0] == "locate_cube":
+                #     if err.values()[0] == 1:
+                #         "Error while locating cube: Cube is out of reach. Relocate the cube in the range 10 to 45 cm from base "
+                # 
+                #
+                # if err.keys()[0] == "grab_cube":
+                #     if err.values()[0] == 1:
+                #         "Error while grabbing cube: No valid pose found \n Try relocating the cube"
 
-                if err.keys()[0] == "grab_cube":
-                    if err.values()[0] == 1:
-                        print("Error while grabbing cube: No valid pose found \n Try relocating the cube")
-
-                else:
-                    print("Error while grabbing cube: ", err)
-
+                print("Error while grabbing cube: ", err)
 
             # Try placing cube at home position
             try:
@@ -150,50 +145,77 @@ if __name__ == '__main__':
                 BOT.arm.go_to_sleep_pose()
 
                 if res:
-                    print("Place cube at home.")
-                    SUCCESS = True
+                    print("Cube placed at home successfully.")
+                    
                 else:
                     print("Failed to place cube at home. Trying again.")
+                    print("May need to reposition the cube in workspace.")
                     continue
 
             except Exception as err:
                 print(err)
 
 
-            # Re-orient the cube in correct position
-            try:
-                re_orient_move_set = re_orient_cube(up_marker_id, camera_side_id )
-                print(re_orient_move_set)
-                if len(re_orient_move_set) != 0:
-                    perform_actions(BOT, re_orient_move_set)
+            # Get the move set required to re-orient the cube so that white side faces up and green side faces the robot.
+            # This step is necessary because the scan program requires the cube to be in a specific orientation.
+            if re_orient_move_set == None:
 
+                try:
+                    re_orient_move_set = re_orient_cube(up_marker_id, camera_side_id )
+                    print("Robot move set to reorient the cube: ",re_orient_move_set)
+                    if len(re_orient_move_set) != 0:
+                        res,err = perform_actions(BOT, re_orient_move_set)
+                        
+                        if res != True:
+                            print("Failed to perform action: ", err)
+                            continue
 
-            except Exception as err:
-                print(err)
+                except Exception as err:
+                    print(err)
 
             
 
-            # Scan cube
+            # Scan cthe cube sides to analyse it's state/scramble
+            # Refer coverter.py and script_test.py for the move set inference
+            if solve_move_set == None:
+                try:
+                    solve_move_set = scan_cube(CAMERA_NUMBER=CAMERA_NUMBER, CAMERA_NAME=CAMERA_NAME, bot=BOT)
+                    print("Solution to solve in terms of cube moves: ",solve_move_set)
+
+                    robot_moves = convert_to_robot_moves(solve_move_set)
+                    print("Solution to solve in terms of robot moves: ", robot_moves)
+
+                except Exception as err:
+                    print(err)
+
+            # Set robot at a position to grab the cube and perform the solution moveset
+            move_gripper_just_above_home_position(BOT)
+            BOT.gripper.open()
+
+            #sample_solution = ["z","z'", "x","x'",'y',"y'",'y2']
             try:
-                move_set = scan_cube(CAMERA_NUMBER=CAMERA_NUMBER, CAMERA_NAME=CAMERA_NAME, bot=BOT)
-                print(move_set)
-                robot_moves = convertToRobotMoves(move_set)
-                print(robot_moves)
-                move_gripper_just_above_home_position(BOT)
-                BOT.gripper.open()
-                #sample = ["z","z'", "x","x'",'y',"y'",'y2']
-                perform_actions(BOT, robot_moves)
-            
+                res,err = perform_actions(BOT, robot_moves)
             except Exception as err:
                 print(err)
-            # Run solving program and get a set of moves
-
-            # Solve cube
+           
+            if res != True:
+                print("Failed to perform action: ", err)
+                continue
+            
+            # End the loop
+            else:
+                SUCCESS = True
+            
 
     except KeyboardInterrupt:
-        BOT.arm.go_to_sleep_pose()
-        BOT.gripper.open()
-        sys.exit(0)
+        print('Interrupted')
+        try:
+            BOT.arm.go_to_sleep_pose()
+            BOT.gripper.open()
+            sys.exit(130)
+        except Exception as err:
+            print(err)
+            
 
     BOT.arm.go_to_home_pose()
     # move_gripper_just_above_home_position(BOT)
