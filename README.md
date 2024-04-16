@@ -6,7 +6,7 @@ Due to the limitations of px-150 we simplified the problem such that the robot's
 
 Results:
 
-[![IMAGE ALT TEXT HERE]([https://www.youtube.com/watch?v=ZS7FbuDW03o])
+See the working demo on the included video file: # Robot Arm Solves Rubik's Cube.mp4
 
 To reproduce the results, follow these steps:
 
@@ -16,6 +16,12 @@ To reproduce the results, follow these steps:
 4. Clone this repo inside the interbotix_ws workspace directory - interbotix_ros_manipulators/interbotix_ros_xsarms/
 5. Run camera calibration to get the calibration matrix, this process is important since the position estimation programs use it. This will not modify your webcam calibration.
 6. Run python3 solve_cube.py -c <camera_number> -n <camera_name>
+
+Contributors:
+Dylan Marin; 
+Jeff Park; 
+Kevin Sani; 
+Laleth Indirani Nehrukumar.
 
 References:
 - https://docs.opencv.org/4.x/d5/dae/tutorial_aruco_detection.html
